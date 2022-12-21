@@ -1,0 +1,21 @@
+.main {
+  padding: 15% 25%;
+}
+.main h2 {
+  color: white;
+  font-size: 5vw;
+}
+
+.main input {
+  width: 50%;
+  font-size: 2vw
+}
+
+.main button {
+  font-size: 2vw;
+  margin-left: 10px;
+}
+
+.empty {
+  color:white;
+}
