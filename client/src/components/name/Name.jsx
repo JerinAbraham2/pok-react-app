@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styles from "./name.module.css";
+import Button from '@mui/material/Button';
+import { Input } from "@mui/material";
 
 const Name = ({ btnClick }) => {
   const [name, setName] = useState("");
@@ -16,8 +18,8 @@ const Name = ({ btnClick }) => {
   return (
     <div className={styles.main}>
       <h2>Enter a name</h2>
-      <input type="text" placeholder="nickname" onChange={(e) => setName(e.target.value)} value={name} />
-      <button onClick={handleSubmit}>submit</button>
+      <Input sx={{ input: {color: "white"} }}  color="primary" type="text" placeholder="name" onChange={(e) => setName(e.target.value)} value={name} />
+      <Button onClick={handleSubmit} variant="contained">submit</Button>
       <h3 className={styles.empty}>{empty}</h3>
     </div>
   );

@@ -19,3 +19,7 @@
 .empty {
   color:white;
 }
+
+.textField {
+  color: white !important;
+}
