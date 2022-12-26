@@ -39,8 +39,5 @@ class Card {
     }
 }
 
-const deck = new Deck();
-1;
-console.log("deck: ", deck.cards);
-deck.shuffle();
-console.log("deck: ", deck.cards);
+exports.Card = Card;
+exports.Deck = Deck;

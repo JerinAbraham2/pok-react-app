@@ -4,6 +4,10 @@ class Player {
         this.name = name;
         this.ready = ready;
     }
+
+    setHand(number) {
+        
+    }
 }
 
 exports.Player = Player;
