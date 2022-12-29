@@ -3,13 +3,18 @@ const Deck = require("./deck.js");
 class GameManager {
     constructor(players) {
         this.players = players;
+        this.deck = new Deck.Deck();
     }
 
-    startGame() {
-        // hand each player a card
-        const newDeck = new Deck.Deck();
-        console.log(newDeck);
+    giveStartingCards() {
+        for (let player of this.players) {
+            player.hand = this.deck.draw(2);
+        }
     }
+
+
+
+    startGame() {}
 }
 
 exports.GameManager = GameManager;

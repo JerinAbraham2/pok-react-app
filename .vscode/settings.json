@@ -1,0 +1,23 @@
+{
+    "restoreTerminals.terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "client",
+                    "commands": ["cd client", "npm start"]
+                },
+                {
+                    "name": "server",
+                    "commands": ["cd server", "npm start"]
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "dev"
+                }
+            ]
+        }
+    ]
+}

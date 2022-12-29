@@ -1,5 +1,5 @@
 const Player = require("./modules/Player.js");
-const GameManager = require ("./modules/GameManager")
+const GameManager = require("./modules/GameManager");
 
 const express = require("express");
 // create our app variable an instance of the express library
@@ -8,6 +8,7 @@ const http = require("http"); // create http server
 // get a class called server
 const { Server } = require("socket.io");
 const cors = require("cors");
+const e = require("express");
 app.use(cors());
 const server = http.createServer(app); // how we create a http server using express
 const port = 4000;
@@ -24,6 +25,7 @@ const io = new Server(server, {
 // variables
 const players = [];
 let id = 1;
+let timeIntervalId = 0;
 const gameManager = new GameManager.GameManager(players);
 
 io.on("connection", (socket) => {
@@ -42,32 +44,45 @@ io.on("connection", (socket) => {
 
     socket.on("client joined", (name) => {
         // if it doesn't include player add it to the list
-        !players.some((el) => el.name === name) && players.push(new Player.Player(socket.id, name, false));
+        // dev || add this to the line below !players.some((el) => el.name === name) &&
+         players.push(new Player.Player(socket.id, name, false));
         io.emit("players", players);
     });
 
     socket.on("player ready", (name) => {
-        const player = players.findIndex((player) => player.name == name); // find player
+        const player = players.findIndex((player) => player.name == name); // find player that is ready
         players[player].ready === true ? (players[player].ready = false) : (players[player].ready = true); // update property
-        io.emit("players", players);
 
-        let time = 5;
+        io.emit("players", players); // update the new players in the ui
+
+        const playersReady = players.every((player) => player.ready === true) && players.length >= 2; // see if all the players are ready and atleast 2
+
+        let time = 5;        
         const timer = () => {
-            io.emit("timer", time); 
+            io.emit("timer", time);
             time--;
-            time >= 0 && timer();
-        }
+            if (time < 0) { // start game
+                clearInterval(timeIntervalId);
+                io.emit("game started")
+                gameManager.startGame()
+            }
+        };
 
-        // are all players ready
-        if (players.every((player) => player.ready === true) && players.length >= 2) {
-            setInterval(timer, 1000);
+        if (playersReady) {
+            timeIntervalId = setInterval(timer, 1000);
         } else {
-            io.emit("are all players ready", false);
+            clearInterval(timeIntervalId);
+            io.emit("timer", 0); // reset to zero
         }
     });
 
     socket.on("game started", () => {
         gameManager.startGame();
+    });
+
+    socket.on("give each player starting cards", () => {
+        giveStartingCards();
+        io.emit("starting cards", gameManager.players)
     })
 });
 
