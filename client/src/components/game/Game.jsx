@@ -5,8 +5,8 @@ import Hand from "./Hand/Hand";
 
 const socket = io.connect("http://localhost:4000");
 
-const Game = ({ users }) => {
-    const [players, setPlayers] = useState(users);
+const Game = () => {
+    const [players, setPlayers] = useState([]);
 
     useEffect(() => {
         // ask the server, give the players each two cards
@@ -14,17 +14,23 @@ const Game = ({ users }) => {
         socket.on("starting cards", (newPlayers) => {
             setPlayers(newPlayers);
         });
+        socket.on("starting players", (player) => {
+            console.log("this is working")
+            console.log(player);
+        })
         return () => {
-            socket.off("game started");
+            socket.off("starting cards");
+            socket.off("starting players");
         };
     }, []);
+
 
     return (
         <div className={styles.gameContainer}>
             <h1>Welcome to the game</h1>
             <div>
                 {players.map((player) => {
-                    return <Hand player={player}></Hand>;
+                    return <Hand key={player.id} player={player}></Hand>;
                 })}
             </div>
         </div>

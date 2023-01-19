@@ -28,6 +28,8 @@ class Deck {
             drawnCards.push(this.cards.pop());
         }
         this.missingCards.push(...drawnCards);
+        
+        // the card from the deck
         return drawnCards;
     }
 }

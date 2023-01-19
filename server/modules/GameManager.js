@@ -3,7 +3,9 @@ const Deck = require("./deck.js");
 class GameManager {
     constructor(players) {
         this.players = players;
-        this.deck = new Deck.Deck();
+        const deck = new Deck.Deck();
+        deck.shuffle();
+        this.deck = deck;
     }
 
     giveStartingCards() {
@@ -12,9 +14,9 @@ class GameManager {
         }
     }
 
-
-
-    startGame() {}
+    startGame() {
+        console.log(this.deck)
+    }
 }
 
 exports.GameManager = GameManager;

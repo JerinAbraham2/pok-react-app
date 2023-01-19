@@ -4,6 +4,7 @@ class Player {
         this.name = name;
         this.ready = ready;
         this.hand = [];
+        this.money = 500; 
     }
 
     setHand(number) {

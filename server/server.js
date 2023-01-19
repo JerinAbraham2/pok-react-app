@@ -30,7 +30,11 @@ const gameManager = new GameManager.GameManager(players);
 
 io.on("connection", (socket) => {
     // the way we listen to events
-    console.log("user connected: ", socket.id);
+    // console.log("user connected: ", socket.id);
+    // ask the server what my id is
+    socket.on("give me my id", () => {
+        socket.emit("here is id", socket.id);
+    });
 
     socket.on("disconnect", () => {
         const playerIndex = players.findIndex((player) => {
@@ -44,8 +48,7 @@ io.on("connection", (socket) => {
 
     socket.on("client joined", (name) => {
         // if it doesn't include player add it to the list
-        // dev || add this to the line below !players.some((el) => el.name === name) &&
-         players.push(new Player.Player(socket.id, name, false));
+        !players.some((player) => player.name === name) && players.push(new Player.Player(socket.id, name, false));
         io.emit("players", players);
     });
 
@@ -57,14 +60,15 @@ io.on("connection", (socket) => {
 
         const playersReady = players.every((player) => player.ready === true) && players.length >= 2; // see if all the players are ready and atleast 2
 
-        let time = 5;        
+        let time = 5;
         const timer = () => {
             io.emit("timer", time);
             time--;
-            if (time < 0) { // start game
+            if (time < 0) {
+                // start game
                 clearInterval(timeIntervalId);
-                io.emit("game started")
-                gameManager.startGame()
+                io.emit("game started");
+                gameManager.startGame();
             }
         };
 
@@ -74,16 +78,20 @@ io.on("connection", (socket) => {
             clearInterval(timeIntervalId);
             io.emit("timer", 0); // reset to zero
         }
-    });
 
-    socket.on("game started", () => {
+        // dev | remove both these lines
+        io.emit("game started");
         gameManager.startGame();
     });
 
     socket.on("give each player starting cards", () => {
-        giveStartingCards();
-        io.emit("starting cards", gameManager.players)
-    })
+        gameManager.giveStartingCards();
+        io.emit("starting cards", gameManager.players);
+        console.log("we are here");
+        for (player of gameManager.players) {
+            io.emit("starting player", player.id);
+        }
+    });
 });
 
 server.listen(port, () => console.log("Server listening on port", port));
